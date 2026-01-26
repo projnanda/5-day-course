@@ -89,8 +89,8 @@ Welcome to the MIT IAP NANDA course! Over 5 days, you'll progress from building 
 
 1. **Clone this repository:**
    ```bash
-   git clone <https://github.com/projnanda/5-day-course.git>
-   cd CrewAI-nanda
+   git clone https://github.com/projnanda/5-day-course.git
+   cd 5-day-course
    ```
 
 2. **Start with Day 1:**
@@ -118,7 +118,6 @@ Welcome to the MIT IAP NANDA course! Over 5 days, you'll progress from building 
 - [CrewAI Documentation](https://docs.crewai.com/)
 - [Model Context Protocol Servers](https://github.com/modelcontextprotocol/servers)
 - [Railway Deployment Guide](https://docs.railway.app/)
-- [NANDA Platform](https://nanda.ai)
 
 ## Course Goals
 
