@@ -12,7 +12,16 @@ Students: Follow the steps to add memory and tools to your agent!
 
 from crewai import Agent, Task, Crew, LLM
 from crewai.tools import BaseTool
-from crewai_tools import DirectoryReadTool, FileReadTool, SerperDevTool, WebsiteSearchTool, YoutubeVideoSearchTool
+from crewai_tools import (
+    DirectoryReadTool, 
+    FileReadTool, 
+    SerperDevTool, 
+    WebsiteSearchTool, 
+    YoutubeVideoSearchTool,
+    YoutubeChannelSearchTool,
+    VisionTool,
+    BrowserbaseLoadTool
+)
 from pydantic import BaseModel, Field
 from typing import Type
 from dotenv import load_dotenv
@@ -47,9 +56,26 @@ web_rag_tool = WebsiteSearchTool()
 
 # Tool 4: YouTube Video Search (RAG-based)
 # Searches within video transcripts
-youtube_tool = YoutubeVideoSearchTool()
+# Note: May not work due to YouTube API limitations
+youtube_video_tool = YoutubeVideoSearchTool()
 
-# Tool 5: Web Search (requires SERPER_API_KEY in .env)
+# Tool 5: YouTube Channel Search (RAG-based)
+# Searches within YouTube channel content
+youtube_channel_tool = YoutubeChannelSearchTool()
+
+# Tool 6: Vision Tool (DALL-E)
+# Generates images using DALL-E API (uses your OPENAI_API_KEY)
+vision_tool = VisionTool()
+
+# Tool 7: Browserbase Load Tool
+# Interacts with and extracts data from web browsers
+# Requires BROWSERBASE_API_KEY and BROWSERBASE_PROJECT_ID in .env
+# Get keys at: https://www.browserbase.com
+browserbase_tool = None
+if os.getenv('BROWSERBASE_API_KEY') and os.getenv('BROWSERBASE_PROJECT_ID'):
+    browserbase_tool = BrowserbaseLoadTool()
+
+# Tool 8: Web Search (requires SERPER_API_KEY in .env)
 # Get free key at: https://serper.dev
 search_tool = None
 if os.getenv('SERPER_API_KEY'):
@@ -87,12 +113,17 @@ available_tools = [
     docs_tool,
     file_tool,
     web_rag_tool,
-    youtube_tool,
+    youtube_video_tool,
+    youtube_channel_tool,
+    vision_tool,
     calculator_tool
 ]
 
+# Add optional tools if API keys are configured
 if search_tool:
     available_tools.append(search_tool)
+if browserbase_tool:
+    available_tools.append(browserbase_tool)
 
 my_agent_twin = Agent(
     role="Personal Digital Twin with Memory and Tools",
@@ -134,6 +165,9 @@ my_agent_twin = Agent(
     - FileReadTool: Read specific files
     - WebsiteSearchTool: Search and extract content from websites (RAG)
     - YoutubeVideoSearchTool: Search within video transcripts (RAG)
+    - YoutubeChannelSearchTool: Search within YouTube channel content (RAG)
+    - VisionTool: Generate images using DALL-E API
+    - BrowserbaseLoadTool: Extract data from web browsers (if API key configured)
     - SerperDevTool: Web search (if API key configured)
     - Calculator: Perform mathematical calculations
     
