@@ -46,3 +46,10 @@ day-2/db/
 
 # Generated files
 day-2/blog-posts/
+
+# Generated images (from DallETool, VisionTool, etc.)
+*.png
+*.jpg
+*.jpeg
+*.gif
+*.webp
