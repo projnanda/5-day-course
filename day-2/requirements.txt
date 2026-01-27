@@ -18,7 +18,7 @@ crewai-tools>=0.12.0
 # Note: SerperDevTool is in crewai-tools, no separate package needed
 beautifulsoup4>=4.12.0  # For WebsiteSearchTool
 lxml>=4.9.0  # For WebsiteSearchTool
-youtube-transcript-api==0.6.2  # For YouTubeVideoSearchTool (pinned version - YouTube API often breaks)
+youtube-transcript-api>=1.2.2  # For YouTubeVideoSearchTool (aligned with crewai-tools requirement)
 
 # Common dependencies
 requests>=2.31.0
