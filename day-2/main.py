@@ -19,6 +19,7 @@ from crewai_tools import (
     WebsiteSearchTool, 
     YoutubeVideoSearchTool,
     YoutubeChannelSearchTool,
+    DallETool,
     VisionTool,
     BrowserbaseLoadTool
 )
@@ -63,11 +64,15 @@ youtube_video_tool = YoutubeVideoSearchTool()
 # Searches within YouTube channel content
 youtube_channel_tool = YoutubeChannelSearchTool()
 
-# Tool 6: Vision Tool (DALL-E)
+# Tool 6: DALL-E Tool
 # Generates images using DALL-E API (uses your OPENAI_API_KEY)
+dalle_tool = DallETool()
+
+# Tool 7: Vision Tool
+# Analyzes and describes existing images using OpenAI's Vision API
 vision_tool = VisionTool()
 
-# Tool 7: Browserbase Load Tool
+# Tool 8: Browserbase Load Tool
 # Interacts with and extracts data from web browsers
 # Requires BROWSERBASE_API_KEY and BROWSERBASE_PROJECT_ID in .env
 # Get keys at: https://www.browserbase.com
@@ -75,7 +80,7 @@ browserbase_tool = None
 if os.getenv('BROWSERBASE_API_KEY') and os.getenv('BROWSERBASE_PROJECT_ID'):
     browserbase_tool = BrowserbaseLoadTool()
 
-# Tool 8: Web Search (requires SERPER_API_KEY in .env)
+# Tool 9: Web Search (requires SERPER_API_KEY in .env)
 # Get free key at: https://serper.dev
 search_tool = None
 if os.getenv('SERPER_API_KEY'):
@@ -115,6 +120,7 @@ available_tools = [
     web_rag_tool,
     youtube_video_tool,
     youtube_channel_tool,
+    dalle_tool,
     vision_tool,
     calculator_tool
 ]
@@ -166,10 +172,14 @@ my_agent_twin = Agent(
     - WebsiteSearchTool: Search and extract content from websites (RAG)
     - YoutubeVideoSearchTool: Search within video transcripts (RAG)
     - YoutubeChannelSearchTool: Search within YouTube channel content (RAG)
-    - VisionTool: Generate images using DALL-E API
+    - DallETool: Generate images using DALL-E - USE THIS when users ask you to create/generate images!
+    - VisionTool: Analyze and describe existing images
     - BrowserbaseLoadTool: Extract data from web browsers (if API key configured)
     - SerperDevTool: Web search (if API key configured)
     - Calculator: Perform mathematical calculations
+    
+    IMPORTANT: When someone asks you to generate, create, or make an image, 
+    you MUST use the DallETool. You CAN generate images - don't tell users you can't!
     
     Use tools when you need external information. Use memory to provide
     personalized, context-aware responses.
