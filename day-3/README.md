@@ -8,60 +8,31 @@ Goal: Deploy your Day 2 agent (with memory and tools) to the cloud using Railway
 # 1. Login to Railway
 railway login
 
-# 2. Link to your project
+# 2. Create a new project
 cd day-3
+railway init
+# Enter a name for your project when prompted
+
+# 3. Link to your project
 railway link
 
-# 3. Deploy (will fail - that's expected!)
+# 4. Deploy (will fail - that's expected!)
 railway up
 
-# 4. Add your OpenAI API key
+# 5. Add your OpenAI API key
 # Go to railway.app → Your Service → Variables → Add OPENAI_API_KEY
 
-# 5. Deploy again (now it will work!)
+# 6. Deploy again (now it will work!)
 railway up
 
-# 6. Get your URL
+# 7. Get your URL
 railway domain
 
-# 7. Test it
+# 8. Test it
 curl https://your-url.up.railway.app/health
 ```
 
-## What You'll Learn
-
-- **What is FastAPI?** How to turn Python code into a web service
-- **What is REST API?** How to make your agent accessible via HTTP
-- **Cloud Deployment:** How to deploy to Railway using CLI
-- **Environment Variables:** How to configure secrets in production
-
-## Understanding FastAPI
-
-### What is FastAPI?
-
-**FastAPI** is a Python web framework that creates REST APIs. Think of it as a translator:
-
-```
-Before (Day 1-2):
-You → Terminal → Python script → Agent → Response
-(Only works on your computer)
-
-After (Day 3):
-Anyone → Internet → HTTP Request → FastAPI → Agent → Response
-(Works from anywhere in the world!)
-```
-
-### Why Do We Need It?
-
-Without FastAPI, your agent only runs locally. With FastAPI:
-- Anyone can use your agent via HTTP requests
-- Works from terminal, browser, or other apps
-- Can be integrated into websites or mobile apps
-- Industry-standard way to expose AI services
-
-## Deployment Steps
-
-### Prerequisites
+## Prerequisites
 
 1. **Railway Account:** Sign up at [railway.app](https://railway.app)
 2. **Railway CLI:** Install Railway CLI
@@ -74,25 +45,7 @@ Without FastAPI, your agent only runs locally. With FastAPI:
    ```
 3. **OpenAI API Key:** From Day 1-2
 
-### Step 1: Deploy Your Agent
-
-```bash
-# Make sure you're in the day-3 directory
-cd day-3
-
-# Login to Railway (first time only)
-railway login
-
-# Create/link project
-railway link
-
-# First deployment (creates the service)
-railway up
-```
-
-This will fail because OPENAI_API_KEY is missing - that's expected! This step creates the service.
-
-### Step 2: Add Environment Variables
+## Add Environment Variables
 
 Now add your OpenAI API key so the agent can work.
 
@@ -123,7 +76,7 @@ railway up
 3. Starts your FastAPI server
 4. Gives you a public URL
 
-### Step 3: Get Your Public URL
+## Get Your Public URL
 
 After deployment completes (takes 2-3 minutes):
 
