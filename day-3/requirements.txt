@@ -2,15 +2,12 @@
 # Day 3: Deploy Agent with Memory + Tools to Railway
 # ==============================================================================
 
-# Core CrewAI with tools and memory support
+# Core CrewAI with tools support and memory
 crewai[tools]>=0.86.0
 
 # FastAPI and Server (for REST API)
 fastapi>=0.109.0
 uvicorn[standard]>=0.27.0
-
-# Data validation
-pydantic>=2.5.0
 
 # Environment management
 python-dotenv>=1.0.0
@@ -20,12 +17,13 @@ crewai-tools>=0.12.0
 
 # Individual tool dependencies
 # Note: SerperDevTool is in crewai-tools, no separate package needed
-beautifulsoup4>=4.12.0             # For WebsiteSearchTool
-lxml>=4.9.0                        # For WebsiteSearchTool
-youtube-transcript-api>=0.6.0      # For YouTubeVideoSearchTool
+beautifulsoup4>=4.12.0  # For WebsiteSearchTool
+lxml>=4.9.0  # For WebsiteSearchTool
+youtube-transcript-api>=0.6.0  # For YouTubeVideoSearchTool
 
 # Common dependencies
 requests>=2.31.0
+pydantic>=2.0.0
 
 # ChromaDB (for memory persistence)
 chromadb>=0.4.0

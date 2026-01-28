@@ -169,6 +169,25 @@ my_agent_twin = Agent(
 )
 
 # ==============================================================================
+# Crew Setup (Create once, reuse for all requests)
+# ==============================================================================
+
+# Create a generic task that will be reused
+answer_task = Task(
+    description="Answer the user's question: {question}. Use memory to recall context and tools when needed.",
+    expected_output="A clear, context-aware answer using memory and tools as needed",
+    agent=my_agent_twin,
+)
+
+# Create crew with memory enabled - this persists across requests!
+my_crew = Crew(
+    agents=[my_agent_twin],
+    tasks=[answer_task],
+    memory=True,  # This enables all 4 memory types!
+    verbose=False,
+)
+
+# ==============================================================================
 # API Endpoints
 # ==============================================================================
 
@@ -219,29 +238,12 @@ async def query_agent(request: QueryRequest):
     start_time = datetime.now()
     
     try:
-        # Create task for this query
-        task = Task(
-            description=f"""
-            Answer the following question: {request.question}
-            
-            Use your memory to recall relevant context.
-            Use your tools when you need external information or calculations.
-            Provide accurate, helpful responses.
-            """,
-            expected_output="A clear, context-aware answer using memory and tools as needed",
-            agent=my_agent_twin,
-        )
-        
-        # Create crew with memory enabled
-        crew = Crew(
-            agents=[my_agent_twin],
-            tasks=[task],
-            memory=True,  # This enables all 4 memory types!
-            verbose=False,
-        )
-        
-        # Execute the crew
-        result = crew.kickoff()
+        # Execute with the persistent crew (reuses memory across requests!)
+        # Pass the question directly - the agent will handle it
+        result = my_crew.kickoff(inputs={
+            "question": request.question,
+            "description": f"Answer the following question: {request.question}. Use your memory to recall relevant context and your tools when needed."
+        })
         
         # Calculate processing time
         end_time = datetime.now()
