@@ -4,6 +4,7 @@
 
 # OpenAI API Key (required for all agents)
 # Get from: https://platform.openai.com/api-keys
+# Used for: LLM model AND VisionTool (DALL-E image generation)
 OPENAI_API_KEY=your-openai-api-key-here
 
 # ==============================================================================
@@ -13,6 +14,12 @@ OPENAI_API_KEY=your-openai-api-key-here
 # Serper API Key - for SerperDevTool (web search)
 # Get free key at: https://serper.dev (2,500 searches/month free)
 SERPER_API_KEY=your-serper-api-key-here
+
+# Browserbase API Keys - for BrowserbaseLoadTool (browser automation)
+# Get keys at: https://www.browserbase.com
+# Used for: Web browser interaction and data extraction
+BROWSERBASE_API_KEY=your-browserbase-api-key-here
+BROWSERBASE_PROJECT_ID=your-browserbase-project-id-here
 
 # OpenAI API Key can also be used for embeddings in RAG tools
 # (WebsiteSearchTool, YoutubeVideoSearchTool use OpenAI embeddings by default)

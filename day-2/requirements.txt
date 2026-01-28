@@ -15,10 +15,10 @@ mcp>=1.0.0
 crewai-tools>=0.12.0
 
 # Individual tool dependencies
-serper>=0.1.0  # For SerperDevTool (web search)
+# Note: SerperDevTool is in crewai-tools, no separate package needed
 beautifulsoup4>=4.12.0  # For WebsiteSearchTool
 lxml>=4.9.0  # For WebsiteSearchTool
-youtube-transcript-api>=0.6.0  # For YouTubeVideoSearchTool
+youtube-transcript-api>=1.2.2  # For YouTubeVideoSearchTool (aligned with crewai-tools requirement)
 
 # Common dependencies
 requests>=2.31.0
