@@ -347,23 +347,25 @@ async def send_message_to_agent(agent_id: str, message: str, conversation_id: st
         return f"❌ Agent '{agent_id}' not found. Known agents: {list(KNOWN_AGENTS.keys())}"
     
     agent_url = KNOWN_AGENTS[agent_id]
+
+   # Switch to /query endpoint
+    if agent_url.endswith("/a2a"):
+        agent_url = agent_url.replace("/a2a", "/query")
+    elif not agent_url.endswith("/query"):
+        agent_url = agent_url.rstrip("/") + "/query"
     
     try:
         async with httpx.AsyncClient(timeout=30.0) as client:
             response = await client.post(
                 agent_url,
                 json={
-                    "content": {
-                        "text": message,
-                        "type": "text"
-                    },
-                    "role": "user",
-                    "conversation_id": conversation_id
+                    "question": message,
+                    "user_id": f"agent-{MY_AGENT_USERNAME}"
                 }
             )
             response.raise_for_status()
             data = response.json()
-            return data.get("content", {}).get("text", str(data))
+            return data.get("answer", str(data))
     
     except httpx.TimeoutException:
         return f"❌ Timeout connecting to agent '{agent_id}'"
