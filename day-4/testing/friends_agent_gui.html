@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Friend's Agent Query GUI</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            background: #0d1117;
+            min-height: 100vh;
+            padding: 20px;
+            color: #c9d1d9;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: #161b22;
+            border-radius: 12px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+            overflow: hidden;
+            border: 1px solid #30363d;
+            padding: 30px;
+        }
+
+        h1 {
+            font-size: 1.5em;
+            margin-bottom: 20px;
+            color: #c9d1d9;
+            text-align: center;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: #c9d1d9;
+        }
+
+        .form-group input,
+        .form-group textarea {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #30363d;
+            border-radius: 6px;
+            font-size: 14px;
+            font-family: inherit;
+            background: #0d1117;
+            color: #c9d1d9;
+        }
+
+        .form-group input:focus,
+        .form-group textarea:focus {
+            outline: none;
+            border-color: #58a6ff;
+        }
+
+        .form-group textarea {
+            min-height: 100px;
+            resize: vertical;
+        }
+
+        button {
+            padding: 12px 24px;
+            border: none;
+            border-radius: 6px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            width: 100%;
+            background: #238636;
+            color: white;
+        }
+
+        button:hover {
+            background: #2ea043;
+        }
+
+        .response {
+            margin-top: 30px;
+            padding: 20px;
+            background: #0d1117;
+            border-radius: 6px;
+            border: 1px solid #30363d;
+            display: none;
+        }
+
+        .response-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+            border-bottom: 1px solid #30363d;
+            padding-bottom: 10px;
+        }
+
+        .response-content {
+            font-family: 'Monaco', 'Menlo', 'Ubuntu Mono', monospace;
+            font-size: 13px;
+            white-space: pre-wrap;
+            word-wrap: break-word;
+            color: #c9d1d9;
+        }
+
+        .status-badge {
+            padding: 2px 8px;
+            border-radius: 12px;
+            font-size: 12px;
+            font-weight: bold;
+        }
+        .status-success { background: #1a472a; color: #3fb950; }
+        .status-error { background: #3d1f1f; color: #f85149; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Friend's Agent Query</h1>
+        
+        <div class="form-group">
+            <label for="url">Endpoint URL</label>
+            <input type="text" id="url" value="https://YOUR_FRIENDS_AGENT.up.railway.app/query" placeholder="https://YOUR_FRIENDS_AGENT.up.railway.app/query">
+        </div>
+
+        <div class="form-group">
+            <label for="question">Question</label>
+            <textarea id="question" placeholder="Hello, what can you help me with?">Hello, what can you help me with?</textarea>
+        </div>
+
+        <div class="form-group">
+            <label for="user_id">User ID</label>
+            <input type="text" id="user_id" value="test-user" placeholder="test-user">
+        </div>
+
+        <button onclick="sendQuery()">Send POST Request</button>
+
+        <div id="response" class="response">
+            <div class="response-header">
+                <h3>Response</h3>
+                <span id="status-badge" class="status-badge"></span>
+            </div>
+            <div id="response-content" class="response-content"></div>
+        </div>
+    </div>
+
+    <script>
+        async function sendQuery() {
+            const url = document.getElementById('url').value.trim();
+            const question = document.getElementById('question').value.trim();
+            const userId = document.getElementById('user_id').value.trim();
+            const responseDiv = document.getElementById('response');
+            const contentDiv = document.getElementById('response-content');
+            const badge = document.getElementById('status-badge');
+
+            if (!url) {
+                alert('Please enter a URL');
+                return;
+            }
+
+            // Show loading state
+            responseDiv.style.display = 'block';
+            contentDiv.innerText = 'Loading...';
+            badge.className = 'status-badge';
+            badge.innerText = 'Sending...';
+
+            try {
+                const response = await fetch(url, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        question: question,
+                        user_id: userId
+                    })
+                });
+
+                const data = await response.json();
+                
+                contentDiv.innerText = JSON.stringify(data, null, 2);
+                
+                if (response.ok) {
+                    badge.className = 'status-badge status-success';
+                    badge.innerText = `${response.status} OK`;
+                } else {
+                    badge.className = 'status-badge status-error';
+                    badge.innerText = `${response.status} ${response.statusText}`;
+                }
+            } catch (error) {
+                contentDiv.innerText = `Error: ${error.message}`;
+                badge.className = 'status-badge status-error';
+                badge.innerText = 'Error';
+            }
+        }
+    </script>
+</body>
+</html>
