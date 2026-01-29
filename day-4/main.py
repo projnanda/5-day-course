@@ -530,6 +530,38 @@ If no agent is suitable, respond with:
                 return agent
         return None
 
+async def send_query_to_url(agent_url: str, question: str, user_id: str = "anonymous") -> str:
+    """
+    Send a direct query to an agent URL
+    
+    Args:
+        agent_url: Full URL to the agent's query endpoint
+        question: Question to ask
+        user_id: User identifier
+    
+    Returns:
+        Response from the agent
+    """
+    try:
+        async with httpx.AsyncClient(timeout=30.0) as client:
+            response = await client.post(
+                agent_url,
+                json={
+                    "question": question,
+                    "user_id": user_id
+                }
+            )
+            response.raise_for_status()
+            data = response.json()
+            return data.get("answer", str(data))
+    
+    except httpx.TimeoutException:
+        return f"Timeout connecting to agent at {agent_url}"
+    except httpx.HTTPError as e:
+        return f"Error communicating with agent: {str(e)}"
+    except Exception as e:
+        return f"Unexpected error: {str(e)}"
+
 async def send_a2a_to_url(agent_url: str, message: str, conversation_id: str) -> str:
     """
     Send an A2A message directly to an agent URL
@@ -1021,15 +1053,19 @@ async def search_and_route(request: SearchRequest):
                 status_code=500,
                 detail=f"Selected agent '{selected_agent.get('label')}' has no valid endpoint"
             )
-        
-        # Ensure URL ends with /a2a
-        if not agent_url.endswith("/a2a"):
-            agent_url = agent_url.rstrip("/") + "/a2a"
+
+        # Ensure URL points to /query endpoint
+        if agent_url.endswith("/a2a"):
+            agent_url = agent_url.replace("/a2a", "/query")
+        elif not agent_url.endswith("/query"):
+            agent_url = agent_url.rstrip("/") + "/query"
         
         print(f"🔀 Routing to: {agent_url}")
         
-        # Step 4: Send A2A message to the selected agent
-        agent_response = await send_a2a_to_url(agent_url, request.query, request.conversation_id)
+        # Step 4: Send Query message to the selected agent
+        # We use the direct query endpoint because we want to ask the agent a question,
+        # not route a message through it to someone else.
+        agent_response = await send_query_to_url(agent_url, request.query, request.user_id)
         
         # Calculate processing time
         end_time = datetime.now()
