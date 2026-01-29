@@ -129,8 +129,13 @@
         <h1>Friend's Agent Query</h1>
         
         <div class="form-group">
-            <label for="url">Endpoint URL</label>
+            <label for="url">Friend's Agent Endpoint (Target)</label>
             <input type="text" id="url" value="https://YOUR_FRIENDS_AGENT.up.railway.app/query" placeholder="https://YOUR_FRIENDS_AGENT.up.railway.app/query">
+        </div>
+
+        <div class="form-group">
+            <label for="source_url">Your Agent Endpoint (Source)</label>
+            <input type="text" id="source_url" placeholder="https://YOUR_AGENT.up.railway.app/a2a">
         </div>
 
         <div class="form-group">
@@ -156,7 +161,8 @@
 
     <script>
         async function sendQuery() {
-            const url = document.getElementById('url').value.trim();
+            let url = document.getElementById('url').value.trim();
+            const sourceUrl = document.getElementById('source_url').value.trim();
             const question = document.getElementById('question').value.trim();
             const userId = document.getElementById('user_id').value.trim();
             const responseDiv = document.getElementById('response');
@@ -166,6 +172,12 @@
             if (!url) {
                 alert('Please enter a URL');
                 return;
+            }
+
+            // Automatically replace ending /a2a with /query
+            if (url.endsWith('/a2a')) {
+                url = url.substring(0, url.length - 4) + '/query';
+                document.getElementById('url').value = url;
             }
 
             // Show loading state
@@ -182,7 +194,8 @@
                     },
                     body: JSON.stringify({
                         question: question,
-                        user_id: userId
+                        user_id: userId,
+                        source_url: sourceUrl // Included for simulation
                     })
                 });
 
